@@ -16,18 +16,19 @@ array[nodes, nodes] of bool: adj_matrix = [|
 % we have a triangle if, for every i, j, k
 % adj_matrix[i][j] AND adj_matrix[i][k] AND adj_matrix[j][k]
 % we choose non-deterministically the nodes and check if triangle
-constraint forall(i in nodes, j in nodes, k in nodes) (
-  (adj_matrix[i, j] /\ adj_matrix[i, k] /\ adj_matrix[j, k]) -> (col[i, j] != col[i, k] \/ col[i, k] != col[j, k] \/ col[i, j] != col[j, k])
+constraint forall(i, j, k in nodes where i < j /\ j < k) (
+  (adj_matrix[i, j] /\ adj_matrix[i, k] /\ adj_matrix[j, k]) -> 
+  (col[i, j] != col[i, k] \/ col[i, k] != col[j, k] \/ col[i, j] != col[j, k])
 );
 
 % we have by track that C[i][j] = C[j][i] (non-direct graph)
-constraint forall(i in nodes, j in nodes) (
+constraint forall(i, j in nodes where i < j) (
   col[i, j] == col[j, i]
 );
 
 % helps the solver to be faster
 % default color for not-triangles arc is 1
-constraint forall(i in nodes, j in nodes) (
+constraint forall(i, j in nodes) (
   not adj_matrix[i, j] -> col[i, j] == 1
 );
 
