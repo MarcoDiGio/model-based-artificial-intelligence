@@ -1,3 +1,5 @@
 src/out
 .vscode
 build
+SATCodec/it
+SATCodec/*.class
